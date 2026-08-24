@@ -1,57 +1,59 @@
 # game.py
 
 from gameparts import Board
-from gameparts.exceptions import FieldIndexError
+from gameparts.exceptions import CellOccupiedError, FieldIndexError
 
 def main():
     game = Board()
+    current_player = 'X'
+    running = True
     game.display()
 
-    # Запускается бесконечный цикл
-    while True:
-        # В этом блоке содержатся операции, которые могут вызвать исключение
-        try:
-            # Пользователь вводит значение номера строки
-            row = int(input('Введите номер строки: '))
-            # Если введённое число меньше 0 или больше
-            # или равно game.field_size...
-            if row < 0 or row >= game.field_size:
-                # ...выбрасывается собственное исключение FieldIndexError
-                raise FieldIndexError
-            column = int(input('Введите номер столбца: '))
-            # Если введённое число меньше 0 или больше
-            # или равно game.field_size...
-            if column < 0 or column >= game.field_size:
-                # ...выбрасывается собственное исключение FieldIndexError
-                raise FieldIndexError
-        # Если возникает исключение FieldIndexError...
-        except FieldIndexError:
-            # ...выводятся сообщения...
-            print(
-                'Значение должно быть неотрицательным и меньше '
-                f'{game.field_size}.'
-            )
-            print('Пожалуйста, введите значения для строки и столбца заново.')
-            # ...и цикл начинает свою работу сначала,
-            # предоставляя пользователю ещё одну попытку ввести данные
-            # Исключение не ввод строки        
-        except ValueError:
-            print('Буквы вводить нельзя. Только числа.')
-            print('Пожалуйста, введите значения для строки и столбца заново.')
-        except Exception as e:
-            print(f'Возникла ошибка: {e}')
-                   
-            continue
-        # Если в блоке try исключения не возникло...
-        else:
-            # ...значит, введённые значения прошли все проверки
-            # и могут быть использованы в дальнейшем.
-            # Цикл прерывается
-            break
+    while running:
 
-    game.make_move(row, column, 'X')
-    print('Ход сделан!')
-    game.display()
+        print(f'Ход делают {current_player}')
+
+        while True:
+            try:
+                row = int(input('Введите номер строки: '))
+                if row < 0 or row >= game.field_size:
+                    raise FieldIndexError
+                column = int(input('Введите номер столбца: '))
+                if column < 0 or column >= game.field_size:
+                    raise FieldIndexError
+                if game.board[row][column] != ' ':
+                    raise CellOccupiedError
+            except FieldIndexError:
+                print(
+                    'Значение должно быть неотрицательным и меньше '
+                    f'{game.field_size}.'
+                )
+                print('Введите значения для строки и столбца заново.')
+                continue
+            except CellOccupiedError:
+                print('Ячейка занята.')
+                print('Пожалуйста, введите другие координаты.')
+                continue
+            except ValueError:
+                print('Буквы вводить нельзя. Только числа.')
+                print('Введите значения для строки и столбца заново.')
+                continue
+            except Exception as e:
+                print(f'Возникла ошибка: {e}')
+            else:
+                break
+
+        game.make_move(row, column, current_player)
+        game.display()
+        # После каждого хода надо делать проверку на победу и на ничью
+        if game.check_win(current_player):
+            print(f'Победили {current_player}.')
+            running = False
+        elif game.is_board_full():
+            print('Ничья!')
+            running = False
+
+        current_player = 'O' if current_player == 'X' else 'X'
 
 if __name__ == '__main__':
     main()

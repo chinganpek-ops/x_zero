@@ -2,11 +2,14 @@
 
 from gameparts import Board
 from gameparts.exceptions import CellOccupiedError, FieldIndexError
+<<<<<<< HEAD
 
 
 def save_result(result):
     with open('results.txt', 'a', encoding='utf-8') as f:
     f.write(result + '\n')
+=======
+>>>>>>> d5bd1ee1b1f2b6584052091592cbf235ce42c24f
 
 def main():
     game = Board()
@@ -52,6 +55,7 @@ def main():
         game.display()
         # После каждого хода надо делать проверку на победу и на ничью
         if game.check_win(current_player):
+<<<<<<< HEAD
             result = f'Победили {current_player}.'
             print(result)
             save_result(result)
@@ -61,6 +65,12 @@ def main():
             result = 'Ничья!'
             print(result)
             save_result(result)
+=======
+            print(f'Победили {current_player}.')
+            running = False
+        elif game.is_board_full():
+            print('Ничья!')
+>>>>>>> d5bd1ee1b1f2b6584052091592cbf235ce42c24f
             running = False
 
         current_player = 'O' if current_player == 'X' else 'X'

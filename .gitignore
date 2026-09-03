@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # IDE и редакторы
 .vscode/
 .idea/
@@ -28,3 +29,7 @@ env/
 
 # Файлы зависимостей
 node_modules/
+=======
+venv
+__pycache__
+>>>>>>> d5bd1ee1b1f2b6584052091592cbf235ce42c24f
